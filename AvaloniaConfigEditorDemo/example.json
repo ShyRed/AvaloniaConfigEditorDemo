@@ -1,0 +1,8 @@
+﻿{
+  "name": "Test server",
+  "description": "Server for testing purposes.",
+  "language": "english",
+  "httpPort": 8080,
+  "httpsPort": 8081,
+  "forceSsl": true
+}

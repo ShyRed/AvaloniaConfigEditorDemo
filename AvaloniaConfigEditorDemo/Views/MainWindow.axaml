@@ -1,0 +1,112 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:AvaloniaConfigEditorDemo.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+        x:Class="AvaloniaConfigEditorDemo.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="AvaloniaConfigEditorDemo"
+        Width="800" Height="600"
+        MinWidth="400" MinHeight="300">
+
+    <Design.DataContext>
+        <!-- This only sets the DataContext for the previewer in an IDE,
+             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+    <Window.Styles>
+        <Style Selector="TextBox">
+            <Setter Property="Margin" Value="0,5,0,10"/>
+            <Setter Property="Padding" Value="8,6"/>
+            <Setter Property="CornerRadius" Value="4"/>
+        </Style>
+        <Style Selector="NumericUpDown">
+            <Setter Property="Margin" Value="0,5,0,10"/>
+            <Setter Property="Padding" Value="8,6"/>
+            <Setter Property="CornerRadius" Value="4"/>
+        </Style>
+        <Style Selector="TextBlock.label">
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Margin" Value="0,0,0,4"/>
+        </Style>
+        <Style Selector="ToggleSwitch">
+            <Setter Property="Margin" Value="0,5,0,10"/>
+            <Setter Property="OnContent" Value="Enabled"/>
+            <Setter Property="OffContent" Value="Disabled"/>
+        </Style>
+    </Window.Styles>
+    
+    <DockPanel>
+        
+        <TextBlock DockPanel.Dock="Top"
+                   Text="Server Configuration"
+                   FontSize="24"
+                   FontWeight="Bold"
+                   Margin="20"/>
+        
+        <StackPanel DockPanel.Dock="Bottom"
+                    HorizontalAlignment="Right"
+                    Margin="20"
+                    Orientation="Horizontal">
+                        
+            <!-- Load Button -->
+            <Button Content="Load Configuration"
+                    Padding="20 10"
+                    Command="{Binding LoadJsonCommand}"/>
+                    
+            <!-- Save Button -->
+            <Button Content="Save Configuration"
+                    Padding="20,10"
+                    Command="{Binding SaveJsonCommand}"
+                    Background="{DynamicResource AccentButtonBackground}"/>
+        </StackPanel>
+        
+        <Border Padding="20" Background="{DynamicResource SystemAltHighColor}">
+            <ScrollViewer>
+                <StackPanel Spacing="10" Margin="10">
+                    <!-- Name -->
+                    <TextBlock Text="Name" Classes="label"/>
+                    <TextBox Text="{Binding Name}"
+                             Watermark="Enter server name"/>
+
+                    <!-- Description -->
+                    <TextBlock Text="Description" Classes="label"/>
+                    <TextBox Text="{Binding Description}"
+                             Watermark="Enter server description"
+                             Height="60"
+                             AcceptsReturn="True"
+                             TextWrapping="Wrap"/>
+
+                    <!-- Language -->
+                    <TextBlock Text="Language" Classes="label"/>
+                    <TextBox Text="{Binding Language}"
+                             Watermark="Enter preferred language"/>
+
+                    <!-- HTTP Port -->
+                    <TextBlock Text="HTTP Port" Classes="label"/>
+                    <NumericUpDown Value="{Binding HttpPort}"
+                                   Minimum="1"
+                                   Maximum="65535"
+                                   FormatString="####"/>
+
+                    <!-- HTTPS Port -->
+                    <TextBlock Text="HTTPS Port" Classes="label"/>
+                    <NumericUpDown Value="{Binding HttpsPort}"
+                                   Minimum="1"
+                                   Maximum="65535"
+                                   FormatString="####"/>
+
+                    <!-- Force SSL -->
+                    <TextBlock Text="Force SSL" Classes="label"/>
+                    <ToggleSwitch IsChecked="{Binding ForceSsl}"/>
+                    
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+        
+    </DockPanel>
+</Window>
+
