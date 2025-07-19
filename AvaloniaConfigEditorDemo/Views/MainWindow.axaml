@@ -40,30 +40,43 @@
     </Window.Styles>
     
     <SplitView IsPaneOpen="{Binding IsPaneOpen}"
-               OpenPaneLength="200"
+               OpenPaneLength="220"
                CompactPaneLength="48"
                DisplayMode="CompactInline"
                PaneBackground="Transparent">
         
         <SplitView.Pane>
-            <StackPanel Spacing="5"
-                        Margin="5">
-                <Button Command="{Binding TogglePaneCommand}">
-                    <PathIcon Data="{StaticResource LineHorizontal3Regular}" />
+            <DockPanel>
+                <Button DockPanel.Dock="Bottom"
+                        Margin="5"
+                        HorizontalAlignment="Stretch"
+                        Background="Transparent"
+                        Command="{Binding ExitApplicationCommand}">
+                    <StackPanel Spacing="15" Orientation="Horizontal">
+                        <PathIcon Data="{StaticResource DismissCircleRegular}" />
+                        <TextBlock Text="Exit" />
+                    </StackPanel>
                 </Button>
-                <ListBox ItemsSource="{Binding Items}"
-                         SelectedItem="{Binding SelectedItem}"
-                         Background="Transparent">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate DataType="{x:Type vm:NavigationListItem}">
-                            <StackPanel Spacing="15" Orientation="Horizontal">
-                                <PathIcon Data="{Binding Icon}" />
-                                <TextBlock Text="{Binding Label}" />
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
-            </StackPanel>
+                
+                <StackPanel Spacing="5"
+                            Margin="5">
+                    <Button Command="{Binding TogglePaneCommand}">
+                        <PathIcon Data="{StaticResource LineHorizontal3Regular}" />
+                    </Button>
+                    <ListBox ItemsSource="{Binding Items}"
+                             SelectedItem="{Binding SelectedItem}"
+                             Background="Transparent">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate DataType="{x:Type vm:NavigationListItem}">
+                                <StackPanel Spacing="15" Orientation="Horizontal">
+                                    <PathIcon Data="{Binding Icon}" />
+                                    <TextBlock Text="{Binding Label}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </StackPanel>
+            </DockPanel>
         </SplitView.Pane>
         
         <SplitView.Content>

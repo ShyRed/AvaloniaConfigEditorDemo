@@ -28,6 +28,12 @@ public partial class MainWindowViewModel : ViewModelBase
     [RelayCommand]
     private void TogglePane() => IsPaneOpen = !IsPaneOpen;
 
+    [RelayCommand]
+    private static void ExitApplication()
+    {
+        Environment.Exit(0);
+    }
+
     partial void OnSelectedItemChanged(NavigationListItem? value)
     {
         if (value is null)
