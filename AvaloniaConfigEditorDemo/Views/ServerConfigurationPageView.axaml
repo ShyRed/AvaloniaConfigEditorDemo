@@ -1,0 +1,86 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:AvaloniaConfigEditorDemo.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="AvaloniaConfigEditorDemo.Views.ServerConfigurationPageView"
+             x:DataType="vm:ServerConfigurationPageViewModel">
+    
+    <Design.DataContext>
+        <!-- This only sets the DataContext for the previewer in an IDE,
+             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+        <vm:ServerConfigurationPageViewModel/>
+    </Design.DataContext>
+    
+    <DockPanel>
+        
+        <TextBlock DockPanel.Dock="Top"
+                   Text="Server Configuration"
+                   FontSize="24"
+                   FontWeight="Bold"
+                   Margin="20"/>
+        
+        <StackPanel DockPanel.Dock="Bottom"
+                    HorizontalAlignment="Right"
+                    Margin="20"
+                    Orientation="Horizontal">
+                        
+            <!-- Load Button -->
+            <Button Content="Load Configuration"
+                    Padding="20 10"
+                    Command="{Binding LoadJsonCommand}"/>
+                    
+            <!-- Save Button -->
+            <Button Content="Save Configuration"
+                    Padding="20,10"
+                    Command="{Binding SaveJsonCommand}"
+                    Background="{DynamicResource AccentButtonBackground}"/>
+        </StackPanel>
+        
+        <Border Padding="20" Background="{DynamicResource SystemAltHighColor}">
+            <ScrollViewer>
+                <StackPanel Spacing="10" Margin="10">
+                    <!-- Name -->
+                    <TextBlock Text="Name" Classes="label"/>
+                    <TextBox Text="{Binding Name}"
+                             Watermark="Enter server name"/>
+
+                    <!-- Description -->
+                    <TextBlock Text="Description" Classes="label"/>
+                    <TextBox Text="{Binding Description}"
+                             Watermark="Enter server description"
+                             Height="60"
+                             AcceptsReturn="True"
+                             TextWrapping="Wrap"/>
+
+                    <!-- Language -->
+                    <TextBlock Text="Language" Classes="label"/>
+                    <TextBox Text="{Binding Language}"
+                             Watermark="Enter preferred language"/>
+
+                    <!-- HTTP Port -->
+                    <TextBlock Text="HTTP Port" Classes="label"/>
+                    <NumericUpDown Value="{Binding HttpPort}"
+                                   Minimum="1"
+                                   Maximum="65535"
+                                   FormatString="####"/>
+
+                    <!-- HTTPS Port -->
+                    <TextBlock Text="HTTPS Port" Classes="label"/>
+                    <NumericUpDown Value="{Binding HttpsPort}"
+                                   Minimum="1"
+                                   Maximum="65535"
+                                   FormatString="####"/>
+
+                    <!-- Force SSL -->
+                    <TextBlock Text="Force SSL" Classes="label"/>
+                    <ToggleSwitch IsChecked="{Binding ForceSsl}"/>
+                    
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+        
+    </DockPanel>
+    
+</UserControl>

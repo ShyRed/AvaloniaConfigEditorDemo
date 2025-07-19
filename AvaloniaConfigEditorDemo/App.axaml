@@ -10,7 +10,7 @@
     </Application.DataTemplates>
   
     <Application.Styles>
-        
+        <StyleInclude Source="avares://AvaloniaConfigEditorDemo/Assets/Icons.axaml"></StyleInclude>
     </Application.Styles>
              
 </Application>

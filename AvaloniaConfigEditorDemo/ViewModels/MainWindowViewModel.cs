@@ -1,5 +1,10 @@
 ﻿using System;
+using System.Collections.ObjectModel;
+using System.Net.Mime;
 using System.Threading.Tasks;
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Media;
 using AvaloniaConfigEditorDemo.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -8,53 +13,57 @@ namespace AvaloniaConfigEditorDemo.ViewModels;
 
 public partial class MainWindowViewModel : ViewModelBase
 {
-    [ObservableProperty] private string _jsonFilepath 
-        = System.IO.Path.Combine(Environment.CurrentDirectory, "example.json");
-    
-    [ObservableProperty] private string _name = string.Empty;
+    public ObservableCollection<NavigationListItem> Items { get; } = new()
+    {
+        new NavigationListItem(typeof(ServerConfigurationPageViewModel), "SettingsRegular"),
+        new NavigationListItem(typeof(SessionManagementPageViewModel), "AppsListRegular")
+    };
 
-    [ObservableProperty] private string _description = string.Empty;
+    [ObservableProperty] private NavigationListItem? _selectedItem;
 
-    [ObservableProperty] private string _language = string.Empty;
+    [ObservableProperty] private bool _isPaneOpen = true;
 
-    [ObservableProperty] private int _httpPort = 8080;
-
-    [ObservableProperty] private int _httpsPort = 8081;
-
-    [ObservableProperty] private bool _forceSsl = true;
-    
-    private ServerConfig _serverConfig = new ServerConfig();
+    [ObservableProperty] private ViewModelBase _currentPage = new ServerConfigurationPageViewModel();
 
     [RelayCommand]
-    private async Task LoadJson()
+    private void TogglePane() => IsPaneOpen = !IsPaneOpen;
+
+    partial void OnSelectedItemChanged(NavigationListItem? value)
     {
-        if (!System.IO.File.Exists(JsonFilepath))
+        if (value is null)
             return;
 
-        await using System.IO.Stream stream = System.IO.File.OpenRead(JsonFilepath);
-        _serverConfig = await System.Text.Json.JsonSerializer.DeserializeAsync<ServerConfig>(stream)
-            .ConfigureAwait(true) ?? new ServerConfig();
+        var page = Activator.CreateInstance(value.PageType) as ViewModelBase;
+        if (page is null)
+            return;
+        CurrentPage = page;
+    }
+}
 
-        Name = _serverConfig.Name;
-        Description = _serverConfig.Description;
-        Language = _serverConfig.Language;
-        HttpPort = _serverConfig.HttpPort;
-        HttpsPort = _serverConfig.HttpsPort;
-        ForceSsl = _serverConfig.ForceSsl;
+public sealed class NavigationListItem
+{
+    public NavigationListItem(Type pageType, string iconKey)
+    {
+        Label = MakeLabel(pageType);
+        PageType = pageType;
+
+        if (Application.Current!.TryFindResource(iconKey, out var resource))
+            Icon = (StreamGeometry)resource!;
     }
 
-    [RelayCommand]
-    private async Task SaveJson()
-    {
-        _serverConfig.Name = Name;
-        _serverConfig.Description = Description;
-        _serverConfig.Language = Language;
-        _serverConfig.HttpPort = HttpPort;
-        _serverConfig.HttpsPort = HttpsPort;
-        _serverConfig.ForceSsl = ForceSsl;
+    public string Label { get; }
+    public Type PageType { get; }
+    public StreamGeometry? Icon { get; }
 
-        await using System.IO.Stream stream = System.IO.File.Create(JsonFilepath);
-        await System.Text.Json.JsonSerializer.SerializeAsync(stream, _serverConfig)
-            .ConfigureAwait(true);
+    private static string MakeLabel(Type pageType)
+    {
+        var label = pageType.Name.Replace("PageViewModel", string.Empty);
+        for (var i = 1; i < label.Length; i++)
+        {
+            if (!char.IsUpper(label[i])) continue;
+            label = label.Insert(i, " ");
+            i++;
+        }
+        return label;
     }
 }
